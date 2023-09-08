@@ -367,7 +367,7 @@ GameObject:
   - component: {fileID: 1169420613}
   - component: {fileID: 1169420612}
   - component: {fileID: 1169420611}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -611,11 +611,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   controller: {fileID: 1436190636}
   speed: 12
-  gravity: -9.81
+  gravity: -18.81
   groundCheck: {fileID: 846755630}
   groundDistance: 0.4
   groundMask:
     serializedVersion: 2
     m_Bits: 64
-  jumpHeight: 0
+  jumpHeight: 10
+  isGrounded: 0
   isHiding: 0

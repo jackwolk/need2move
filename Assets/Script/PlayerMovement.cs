@@ -16,7 +16,7 @@ public class PlayerMovement : MonoBehaviour
     public LayerMask groundMask;
     public float jumpHeight;
 
-    bool isGrounded;
+    public bool isGrounded;
 
     public bool isHiding;
 
