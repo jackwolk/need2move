@@ -24,6 +24,8 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float Speed;
     [SerializeField] private float Sensitivity;
     [SerializeField] private float Jumpforce;
+    [SerializeField] private float speedLimit;
+    [SerializeField] private float gravity;
 
 
     // Start is called before the first frame update
@@ -50,13 +52,22 @@ public class PlayerMovement : MonoBehaviour
 
     private void MovePlayer()
     {
-        Vector3 MoveVector = transform.TransformDirection(PlayerMovementInput) * Speed;
-        PlayerBody.velocity = new Vector3(MoveVector.x, PlayerBody.velocity.y, MoveVector.z);
+        if(PlayerBody.velocity.magnitude < speedLimit)
+        {
+            Vector3 MoveVector = transform.TransformDirection(PlayerMovementInput) * Speed;
+            Vector3 Velocity = new Vector3(MoveVector.x, MoveVector.y, MoveVector.z);
+            PlayerBody.AddForce(Velocity, ForceMode.Force);
+        }
+        
 
         if(Input.GetKeyDown(KeyCode.Space) && isGrounded)
         {
             PlayerBody.AddForce(Vector3.up * Jumpforce, ForceMode.Impulse);
         }
+
+
+
+        PlayerBody.AddForce(Vector3.down * gravity, ForceMode.Force);
     }
 
 }

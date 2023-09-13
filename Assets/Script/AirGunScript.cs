@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,8 +10,7 @@ public class AirGunScript : MonoBehaviour
     public GameObject camera;
 
 
-    public int hforce;
-    public int yforce;
+    public int force;
 
     Vector3 whereLooking;
     
@@ -25,7 +25,7 @@ public class AirGunScript : MonoBehaviour
     void Update()
     {
         
-        whereLooking = camera.transform.forward * hforce + camera.transform.up * yforce;
+        whereLooking = camera.transform.forward * force;
        
         
 
