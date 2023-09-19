@@ -5,11 +5,12 @@ using UnityEngine;
 
 public class AirGunScript : MonoBehaviour
 {
-
+    public GameObject realplayer;
     public Rigidbody player;
     public GameObject camera;
-
-
+    public int bulletCount = 3;
+    public PlayerMovement playerMovement;
+    public float delayMovement = 0.2f;
     public int force;
 
     Vector3 whereLooking;
@@ -18,7 +19,7 @@ public class AirGunScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
+        playerMovement = realplayer.GetComponent<PlayerMovement>();
     }
 
     // Update is called once per frame
@@ -26,17 +27,35 @@ public class AirGunScript : MonoBehaviour
     {
         
         whereLooking = camera.transform.forward * force;
-       
-        
 
-         
-        if (Input.GetMouseButtonDown(0))
+
+        
+        if (Input.GetMouseButtonDown(0) && bulletCount>0)
         {
-            player.AddForce(whereLooking, ForceMode.Impulse);
-            //player.velocity = new Vector3(0,0,3);
+            player.velocity = new Vector3(0,  0,  0);
+            player.AddForce(whereLooking , ForceMode.Impulse);
+            bulletCount -= 1;
+
+            StartCoroutine("StopMovement");
         }
+
+        if(playerMovement.isGrounded == true)
+        {
+            bulletCount = 3;
+        }
+
+
     }
 
+    IEnumerator StopMovement()
+    {
+        playerMovement.enabled = false;
+
+        yield return new WaitForSeconds(delayMovement);
+
+        playerMovement.enabled = true;
+
+    }
 
 
 }
