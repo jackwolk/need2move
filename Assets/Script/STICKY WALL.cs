@@ -5,7 +5,7 @@ using UnityEngine;
 public class STICKYWALL : MonoBehaviour
 {
     public GameObject player;
-    public LayerMask wall;
+    public LayerMask []wall;
     public Rigidbody playerrb;
     public float chkDistance;
 
@@ -19,12 +19,12 @@ public class STICKYWALL : MonoBehaviour
     void Update()
     {
         RaycastHit hit;
-
-        if(Physics.Raycast(player.transform.position, playerrb.velocity, out hit, chkDistance, wall))
+        for (int i = 0; i < wall.Length; i++) { 
+        if (Physics.Raycast(player.transform.position, playerrb.velocity, out hit, chkDistance, wall[i]))
         {
             Debug.Log("Making Horizontal 0");
-            playerrb.velocity = new Vector3(-playerrb.velocity.x, playerrb.velocity.y, -playerrb.velocity.z); 
+            playerrb.velocity = new Vector3(-playerrb.velocity.x, playerrb.velocity.y, -playerrb.velocity.z);
         }
-
+        }
     }
 }
