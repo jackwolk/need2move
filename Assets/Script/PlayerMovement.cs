@@ -22,10 +22,14 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private Rigidbody PlayerBody;
     [Space]
     [SerializeField] private float Speed;
+    [SerializeField] private float airSpeed;
     [SerializeField] private float Sensitivity;
     [SerializeField] private float Jumpforce;
     [SerializeField] private float speedLimit;
     [SerializeField] private float gravity;
+    public bool isFalling;
+    float gravityMultiplier = 1;
+    public float gravityAdder;
 
 
     // Start is called before the first frame update
@@ -46,28 +50,63 @@ public class PlayerMovement : MonoBehaviour
         MovePlayer();
         //MovePlayerCamera();
 
-        
+        if (isFalling == true)
+        {
+            gravityMultiplier += gravityAdder;
+        }
+        else
+        {
+            gravityMultiplier = 1;
+        }
+
 
     }
 
     private void MovePlayer()
     {
-        if(PlayerBody.velocity.magnitude < speedLimit)
+
+        PlayerBody.AddForce(Vector3.down * Time.deltaTime * 10, ForceMode.Force);
+
+        if (PlayerBody.velocity.magnitude < speedLimit && isGrounded)
         {
             Vector3 MoveVector = transform.TransformDirection(PlayerMovementInput) * Speed;
             Vector3 Velocity = new Vector3(MoveVector.x, MoveVector.y, MoveVector.z);
             PlayerBody.AddForce(Velocity, ForceMode.Force);
         }
-        
-
-        if(Input.GetKeyDown(KeyCode.Space) && isGrounded)
+        else if(PlayerBody.velocity.magnitude < speedLimit && !isGrounded)
         {
-            PlayerBody.AddForce(Vector3.up * Jumpforce, ForceMode.Impulse);
+           Vector3 MoveVector = transform.TransformDirection(PlayerMovementInput) * airSpeed;
+           Vector3 Velocity = new Vector3(MoveVector.x, MoveVector.y, MoveVector.z);
+           PlayerBody.AddForce(Velocity, ForceMode.Force);
+        }
+
+        if(PlayerBody.velocity.magnitude > speedLimit && isGrounded)
+        {
+            PlayerBody.velocity = Vector3.ClampMagnitude(PlayerBody.velocity, speedLimit);
         }
 
 
 
-        PlayerBody.AddForce(Vector3.down * gravity, ForceMode.Force);
+        if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
+        {
+            PlayerBody.AddForce(Vector2.up * Jumpforce, ForceMode.Impulse);
+        }
+
+
+
+        //PlayerBody.AddForce(Vector3.down * gravity * gravityMultiplier , ForceMode.Force);
+
+        if (PlayerBody.velocity.y < 0)
+        {
+            isFalling = true;
+        }
+        else
+        {
+            isFalling = false;
+        }
+
+
+
     }
 
 }
