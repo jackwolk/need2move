@@ -28,14 +28,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7884866717463911318}
-  m_LocalRotation: {x: 0, y: 0, z: 0.7071068, w: 0.7071068}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 87.30758, y: -7.852435, z: -328.08182}
   m_LocalScale: {x: 0.7, y: 0.34, z: 0.7}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 7
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &8653938569872112
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -64,7 +64,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: c3cdfad61d9e7e547a16563bad18ede4, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -123,10 +123,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rb: {fileID: 6053929325531645880}
   gun: {fileID: 0}
-  speed: 15
+  speed: 180
   targetLayerNum: 8
   groundLayerNum: 6
   wallLayerNum: 7
+  target: {fileID: 0}
 --- !u!54 &6053929325531645880
 Rigidbody:
   m_ObjectHideFlags: 0

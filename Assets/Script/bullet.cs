@@ -14,11 +14,13 @@ public class bullet : MonoBehaviour
     public int groundLayerNum;
     public int wallLayerNum;
     public target target;
+    
 
     void Start()
     {
         frame = 0;
         gun = GameObject.Find("Gun Gun");
+        gameObject.transform.Rotate(90, 0, 0);
     }
 
     // Update is called once per frame

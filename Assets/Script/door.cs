@@ -8,7 +8,8 @@ public class door : MonoBehaviour
     public GameObject Target;
     public GameObject door1;
     public GameObject door2;
-    int rotation = 0;
+    int timer = 0;
+    public bool isClosed = true;
 
 
 
@@ -16,23 +17,30 @@ public class door : MonoBehaviour
     void Start()
     {
         target = Target.GetComponent<target>();
-        rotation = 0;
+        timer = 0;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (target.isHit == true && rotation<700) {
+        if (target.isHit == true && timer<700) {
             door1.transform.Translate(0, 0, -0.01f);
             door2.transform.Translate(0, 0, 0.01f);
-            rotation += 1;
+            timer += 1;
 
         }
-        else if(target.isHit == false && rotation > 0) {
+        else if(target.isHit == false && timer > 0) {
             door1.transform.Translate(0, 0, 0.01f);
             door2.transform.Translate(0, 0, -0.01f);
-            rotation -= 1;
+            timer -= 1;
 
         }
+
+        if (timer == 0)
+        {
+            isClosed = true;
+        }
+        else { isClosed = false; }
+
     }
 }
