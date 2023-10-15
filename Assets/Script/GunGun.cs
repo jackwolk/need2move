@@ -8,6 +8,7 @@ public class GunGun : MonoBehaviour
     public GameObject bullet;
     public int maxBullet;
     public int currentBullet;
+    public KeyCode reloadKey;
 
 
     // Start is called before the first frame update
@@ -22,6 +23,11 @@ public class GunGun : MonoBehaviour
         {
             currentBullet -= 1;
             Instantiate(bullet, gameObject.transform.position, gameObject.transform.rotation);
+        }
+
+        if (Input.GetKeyDown(reloadKey))
+        {
+            currentBullet = maxBullet;
         }
     }
 }

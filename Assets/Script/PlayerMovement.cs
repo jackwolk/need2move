@@ -30,6 +30,8 @@ public class PlayerMovement : MonoBehaviour
     public bool isFalling;
     float gravityMultiplier = 1;
     public float gravityAdder;
+    public bool isDead;
+
 
 
     // Start is called before the first frame update

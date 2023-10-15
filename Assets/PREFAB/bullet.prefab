@@ -14,9 +14,10 @@ GameObject:
   - component: {fileID: 5263536752596340570}
   - component: {fileID: 7721193123175904373}
   - component: {fileID: 6053929325531645880}
-  m_Layer: 0
+  - component: {fileID: 5333945466796645206}
+  m_Layer: 10
   m_Name: bullet
-  m_TagString: Untagged
+  m_TagString: Bullet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -128,6 +129,8 @@ MonoBehaviour:
   groundLayerNum: 6
   wallLayerNum: 7
   target: {fileID: 0}
+  timer: 0
+  maxTime: 1000
 --- !u!54 &6053929325531645880
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -155,3 +158,20 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 0
+--- !u!114 &5333945466796645206
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7884866717463911318}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b9a305e18de0c04dbd257a21cd47087, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sharedProfile: {fileID: 11400000, guid: 6f6247e0e9c99b04fbac827c269c709f, type: 2}
+  isGlobal: 0
+  blendDistance: 0
+  weight: 1
+  priority: 0

@@ -14,6 +14,8 @@ public class bullet : MonoBehaviour
     public int groundLayerNum;
     public int wallLayerNum;
     public target target;
+    public int timer = 0;
+    public int maxTime = 500;
     
 
     void Start()
@@ -21,6 +23,16 @@ public class bullet : MonoBehaviour
         frame = 0;
         gun = GameObject.Find("Gun Gun");
         gameObject.transform.Rotate(90, 0, 0);
+    }
+
+    private void FixedUpdate()
+    {
+        timer += 1;
+
+        if(timer >= maxTime)
+        {
+            Destroy(gameObject);
+        }
     }
 
     // Update is called once per frame
