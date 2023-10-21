@@ -30,6 +30,8 @@ public class PlayerMovement : MonoBehaviour
     public bool isFalling;
     float gravityMultiplier = 1;
     public float gravityAdder;
+    public bool isDead;
+
 
 
     // Start is called before the first frame update
@@ -67,29 +69,39 @@ public class PlayerMovement : MonoBehaviour
 
         PlayerBody.AddForce(Vector3.down * Time.deltaTime * 10, ForceMode.Force);
 
-        if (PlayerBody.velocity.magnitude < speedLimit && isGrounded)
+        if (PlayerBody.velocity.magnitude <= speedLimit && isGrounded)
         {
             Vector3 MoveVector = transform.TransformDirection(PlayerMovementInput) * Speed;
             Vector3 Velocity = new Vector3(MoveVector.x, MoveVector.y, MoveVector.z);
             PlayerBody.AddForce(Velocity, ForceMode.Force);
         }
-        else if(PlayerBody.velocity.magnitude < speedLimit && !isGrounded)
+        else if(PlayerBody.velocity.magnitude <= speedLimit && !isGrounded)
         {
            Vector3 MoveVector = transform.TransformDirection(PlayerMovementInput) * airSpeed;
            Vector3 Velocity = new Vector3(MoveVector.x, MoveVector.y, MoveVector.z);
            PlayerBody.AddForce(Velocity, ForceMode.Force);
         }
 
-        if(PlayerBody.velocity.magnitude > speedLimit && isGrounded)
+        if(PlayerBody.velocity.x >= speedLimit && isGrounded)
         {
-            PlayerBody.velocity = Vector3.ClampMagnitude(PlayerBody.velocity, speedLimit);
+            Vector3 xClamp = PlayerBody.velocity;
+            xClamp = Vector3.ClampMagnitude(xClamp, speedLimit);
+            PlayerBody.velocity = new Vector3(xClamp.x, PlayerBody.velocity.y, PlayerBody.velocity.z);
         }
 
-
+        if (PlayerBody.velocity.z >= speedLimit && isGrounded)
+        {
+            Vector3 zClamp = PlayerBody.velocity;
+            zClamp = Vector3.ClampMagnitude(zClamp, speedLimit);
+            PlayerBody.velocity = new Vector3(PlayerBody.velocity.x, PlayerBody.velocity.y, zClamp.z);
+        }
 
         if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
         {
+            if (PlayerBody.velocity.y < 0) { PlayerBody.velocity = new Vector3(PlayerBody.velocity.x, 0, PlayerBody.velocity.z); }
+
             PlayerBody.AddForce(Vector2.up * Jumpforce, ForceMode.Impulse);
+            Debug.Log(Vector2.up * Jumpforce);
         }
 
 

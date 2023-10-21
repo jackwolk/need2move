@@ -6,15 +6,21 @@ using UnityEngine;
 public class level : MonoBehaviour
 {
 
+    public Canvas deathMessage;
     public int currentLevel = 0;
     public GameObject[] Spawns;
     public GameObject[] FinalDoors;
+    public PlayerMovement pm;
+    public bool isDead;
 
 
     // Start is called before the first frame update
     void Start()
     {
-
+        pm = GameObject.Find("Player").GetComponent<PlayerMovement>();
+        Cursor.lockState = CursorLockMode.Locked; 
+        deathMessage = gameObject.transform.Find("deathMessage").GetComponent<Canvas>();
+        deathMessage.enabled = false;
     }
 
     // Update is called once per frame
@@ -46,12 +52,30 @@ public class level : MonoBehaviour
     public void checkRestart()
     {
         gameObject.transform.position = Spawns[currentLevel].transform.position;
+        Time.timeScale = 1;
+        Cursor.lockState = CursorLockMode.Locked;
+        deathMessage.enabled = false;
+        isDead = false;
     }
 
     public void endLevel()
     {
         currentLevel += 1;
         checkRestart();
+    }
+
+    public void SinglePlayerDeath()
+    {
+        isDead = true;
+        Cursor.lockState = CursorLockMode.Confined;
+        deathMessage.enabled = true;
+        Time.timeScale = 0;
+
+
+        foreach (GameObject i in GameObject.FindGameObjectsWithTag("Bullet"))
+        {
+            Destroy(i);
+        }
     }
 
 }
