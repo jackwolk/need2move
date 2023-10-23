@@ -12,6 +12,7 @@ public class level : MonoBehaviour
     public GameObject[] FinalDoors;
     public PlayerMovement pm;
     public bool isDead;
+    public bulletUI bUI;
 
 
     // Start is called before the first frame update
@@ -47,6 +48,7 @@ public class level : MonoBehaviour
     public void StartLevel(int Level)
     {
         gameObject.transform.position = Spawns[Level].transform.position;
+        bUI.ForceReload();
     }
 
     public void checkRestart()
@@ -56,6 +58,7 @@ public class level : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         deathMessage.enabled = false;
         isDead = false;
+        bUI.ForceReload();
     }
 
     public void endLevel()
