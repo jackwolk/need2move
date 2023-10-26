@@ -12,6 +12,7 @@ public class AirGunScript : MonoBehaviour
     public PlayerMovement playerMovement;
     public float delayMovement = 0.2f;
     public int force;
+    public int maxBullets = 3;
 
     Vector3 whereLooking;
     
