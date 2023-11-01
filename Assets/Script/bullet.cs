@@ -13,9 +13,13 @@ public class bullet : MonoBehaviour
     public int targetLayerNum;
     public int groundLayerNum;
     public int wallLayerNum;
+    public int bounceLayerNum;
+    public int bounceNum = 0;
     public target target;
     public int timer = 0;
     public int maxTime = 500;
+    Vector3 lastVelocity;
+    
     
 
     void Start()
@@ -33,6 +37,13 @@ public class bullet : MonoBehaviour
         {
             Destroy(gameObject);
         }
+
+    }
+
+    private void LateUpdate()
+    {
+
+        lastVelocity = rb.velocity;
     }
 
     // Update is called once per frame
@@ -45,7 +56,7 @@ public class bullet : MonoBehaviour
         if(frame == 1)
         {
             rb.velocity = gun.transform.forward * speed;
-            Debug.Log("JAJAJA");
+           
         }
 
     }
@@ -70,7 +81,16 @@ public class bullet : MonoBehaviour
             Debug.Log("WEAL");
             Destroy(gameObject);
         }
+        else if(collision.gameObject.layer == bounceLayerNum)
+        {
+            Debug.Log("BOUNC");
+            
+                float newSpeed = lastVelocity.magnitude;
+                Vector3 newDirection = Vector3.Reflect(lastVelocity.normalized, collision.contacts[0].normal);
 
+                rb.velocity = Vector3.ClampMagnitude(newDirection * Mathf.Max(lastVelocity.magnitude, 2), 65);
+
+        }
 
     }
 
