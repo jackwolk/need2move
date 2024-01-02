@@ -69,25 +69,21 @@ public class PlayerMovement : MonoBehaviour
 
         PlayerBody.AddForce(Vector3.down * Time.deltaTime * 10, ForceMode.Force);
 
-        if (isGrounded)
+        if (PlayerBody.velocity.magnitude <= speedLimit && isGrounded)
         {
-
             Vector3 MoveVector = transform.TransformDirection(PlayerMovementInput) * Speed;
             Vector3 Velocity = new Vector3(MoveVector.x, MoveVector.y, MoveVector.z);
             PlayerBody.AddForce(Velocity, ForceMode.Force);
-            
         }
-        else if(!isGrounded)
+        else if (PlayerBody.velocity.magnitude <= speedLimit && !isGrounded)
         {
-           Vector3 MoveVector = transform.TransformDirection(PlayerMovementInput) * airSpeed;
-           Vector3 Velocity = new Vector3(MoveVector.x, MoveVector.y, MoveVector.z);
-           PlayerBody.AddForce(Velocity, ForceMode.Force);
+            Vector3 MoveVector = transform.TransformDirection(PlayerMovementInput) * airSpeed;
+            Vector3 Velocity = new Vector3(MoveVector.x, MoveVector.y, MoveVector.z);
+            PlayerBody.AddForce(Velocity, ForceMode.Force);
         }
 
-        if(PlayerBody.velocity.x >= speedLimit && isGrounded)
+        if (PlayerBody.velocity.x >= speedLimit && isGrounded)
         {
-            Debug.Log(PlayerBody.velocity.x);
-            Debug.Log("MAX");
             Vector3 xClamp = PlayerBody.velocity;
             xClamp = Vector3.ClampMagnitude(xClamp, speedLimit);
             PlayerBody.velocity = new Vector3(xClamp.x, PlayerBody.velocity.y, PlayerBody.velocity.z);
@@ -95,7 +91,6 @@ public class PlayerMovement : MonoBehaviour
 
         if (PlayerBody.velocity.z >= speedLimit && isGrounded)
         {
-            Debug.Log("MAXZ");
             Vector3 zClamp = PlayerBody.velocity;
             zClamp = Vector3.ClampMagnitude(zClamp, speedLimit);
             PlayerBody.velocity = new Vector3(PlayerBody.velocity.x, PlayerBody.velocity.y, zClamp.z);

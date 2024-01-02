@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
+using System.Timers;
 using UnityEngine;
 
 public class AirGunScript : MonoBehaviour
@@ -10,13 +12,15 @@ public class AirGunScript : MonoBehaviour
     public GameObject camera;
     public int bulletCount = 3;
     public PlayerMovement playerMovement;
-    public float delayMovement = 0.2f;
+    public float delayMovement = 0f;
     public int force;
     public int maxBullets = 3;
+    public bool doOnce = true;
+    public bool timerComplete = false;
 
     Vector3 whereLooking;
-    
-    
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -26,21 +30,26 @@ public class AirGunScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
+        if (timerComplete == true)
+        {
+            StopCoroutine("Timer");
+        }
+
         whereLooking = camera.transform.forward * force;
 
 
-        
-        if (Input.GetMouseButtonDown(0) && bulletCount>0)
+
+        if (Input.GetMouseButtonDown(0) && bulletCount > 0)
         {
-            player.velocity = new Vector3(0,  0,  0);
-            player.AddForce(whereLooking , ForceMode.Impulse);
+            player.velocity = new Vector3(0, 0, 0);
+            if (doOnce == true) { InvokeRepeating("AddVelocity", 0f, 0.1f); doOnce = false; }
+            StartCoroutine("Timer");
             bulletCount -= 1;
 
-            StartCoroutine("StopMovement");
         }
 
-        if(playerMovement.isGrounded == true)
+        if (playerMovement.isGrounded == true)
         {
             bulletCount = 3;
         }
@@ -48,14 +57,13 @@ public class AirGunScript : MonoBehaviour
 
     }
 
-    IEnumerator StopMovement()
-    {
-        playerMovement.enabled = false;
+    public IEnumerator Timer() {
+        yield return new WaitForSeconds(1);
+        timerComplete = true;
+}
 
-        yield return new WaitForSeconds(delayMovement);
-
-        playerMovement.enabled = true;
-
+    void AddVelocity() {
+        player.AddForce(whereLooking, ForceMode.Impulse);
     }
 
 

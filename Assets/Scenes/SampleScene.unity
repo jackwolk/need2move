@@ -5510,6 +5510,8 @@ MonoBehaviour:
   delayMovement: 0.4
   force: -50
   maxBullets: 3
+  doOnce: 1
+  timerComplete: 0
 --- !u!1 &1250163990
 GameObject:
   m_ObjectHideFlags: 0
