@@ -5,18 +5,26 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-
+    
     public bool isGrounded;
     public Transform groundCheck;
     public float groundDistance = 0.4f;
     public LayerMask groundMask;
 
 
-    private Vector3 PlayerMovementInput;
-    private Vector2 PlayerMouseInput;
-    private float xRot;
-    private float yRot;
 
+    //FIXED STUFF
+    float horizontalInput;
+    float verticalInput;
+    Vector3 moveDirection;
+    public Transform orientation;
+    float groundDrag = 5;
+    [SerializeField] float speedLimit;
+    [SerializeField] float airSpeedLimit;
+    [SerializeField] KeyCode jumpKey;
+
+
+    public GameObject Player;
 
     [SerializeField] private Transform PlayerCamera;
     [SerializeField] private Rigidbody PlayerBody;
@@ -25,7 +33,6 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float airSpeed;
     [SerializeField] private float Sensitivity;
     [SerializeField] private float Jumpforce;
-    [SerializeField] private float speedLimit;
     [SerializeField] private float gravity;
     public bool isFalling;
     float gravityMultiplier = 1;
@@ -46,10 +53,17 @@ public class PlayerMovement : MonoBehaviour
 
         isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
 
-        PlayerMovementInput = new Vector3(Input.GetAxis("Horizontal"), 0f, Input.GetAxis("Vertical"));
-        PlayerMouseInput = new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
+        MyInput();
 
-        MovePlayer();
+        if (isGrounded)
+        {
+            PlayerBody.drag = groundDrag;
+        }
+        else
+        {
+            PlayerBody.drag = 0;
+        }
+        //MovePlayer();
         //MovePlayerCamera();
 
         if (isFalling == true)
@@ -61,69 +75,61 @@ public class PlayerMovement : MonoBehaviour
             gravityMultiplier = 1;
         }
 
+        if(Input.GetKey(jumpKey) && isGrounded)
+        {
+            Jump();
+        }
 
     }
 
-    private void MovePlayer()
+
+
+    private void FixedUpdate()
     {
+        FixedMovedPlayer();
+        FixedSpeedLimit();
 
-        PlayerBody.AddForce(Vector3.down * Time.deltaTime * 10, ForceMode.Force);
+    }
 
-        if (isGrounded)
+    private void FixedSpeedLimit()
+    {
+        Vector3 flatVel = new Vector3(PlayerBody.velocity.x, 0f, PlayerBody.velocity.z);
+
+        if(flatVel.magnitude > speedLimit)
         {
+            Vector3 limitedVel = new Vector3(0,0,0);
 
-            Vector3 MoveVector = transform.TransformDirection(PlayerMovementInput) * Speed;
-            Vector3 Velocity = new Vector3(MoveVector.x, MoveVector.y, MoveVector.z);
-            PlayerBody.AddForce(Velocity, ForceMode.Force);
-            
+            if(isGrounded == true)
+            {
+
+                limitedVel = flatVel.normalized * speedLimit;
+            }
+            if(isGrounded == false)
+            {
+                limitedVel = flatVel.normalized * airSpeedLimit;
+            }
+
+            PlayerBody.velocity = new Vector3(limitedVel.x, PlayerBody.velocity.y, limitedVel.z);
         }
-        else if(!isGrounded)
-        {
-           Vector3 MoveVector = transform.TransformDirection(PlayerMovementInput) * airSpeed;
-           Vector3 Velocity = new Vector3(MoveVector.x, MoveVector.y, MoveVector.z);
-           PlayerBody.AddForce(Velocity, ForceMode.Force);
-        }
+    }
 
-        if(PlayerBody.velocity.x >= speedLimit && isGrounded)
-        {
-            Debug.Log(PlayerBody.velocity.x);
-            Debug.Log("MAX");
-            Vector3 xClamp = PlayerBody.velocity;
-            xClamp = Vector3.ClampMagnitude(xClamp, speedLimit);
-            PlayerBody.velocity = new Vector3(xClamp.x, PlayerBody.velocity.y, PlayerBody.velocity.z);
-        }
+    private void MyInput()
+    {
+        horizontalInput = Input.GetAxisRaw("Horizontal");
+        verticalInput = Input.GetAxisRaw("Vertical");
+    }
 
-        if (PlayerBody.velocity.z >= speedLimit && isGrounded)
-        {
-            Debug.Log("MAXZ");
-            Vector3 zClamp = PlayerBody.velocity;
-            zClamp = Vector3.ClampMagnitude(zClamp, speedLimit);
-            PlayerBody.velocity = new Vector3(PlayerBody.velocity.x, PlayerBody.velocity.y, zClamp.z);
-        }
+    private void Jump()
+    {
+        PlayerBody.velocity = new Vector3(PlayerBody.velocity.x, 0f, PlayerBody.velocity.z);
+        PlayerBody.AddForce(transform.up * Jumpforce, ForceMode.Impulse);
+    }
 
-        if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
-        {
-            if (PlayerBody.velocity.y < 0) { PlayerBody.velocity = new Vector3(PlayerBody.velocity.x, 0, PlayerBody.velocity.z); }
+    private void FixedMovedPlayer()
+    {
+        moveDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;
 
-            PlayerBody.AddForce(Vector2.up * Jumpforce, ForceMode.Impulse);
-            Debug.Log(Vector2.up * Jumpforce);
-        }
-
-
-
-        //PlayerBody.AddForce(Vector3.down * gravity * gravityMultiplier , ForceMode.Force);
-
-        if (PlayerBody.velocity.y < 0)
-        {
-            isFalling = true;
-        }
-        else
-        {
-            isFalling = false;
-        }
-
-
-
+        PlayerBody.AddForce(moveDirection.normalized * Speed * 5f, ForceMode.Force);
     }
 
 }

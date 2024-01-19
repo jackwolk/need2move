@@ -34,6 +34,12 @@ public class AirGunScript : MonoBehaviour
         if (Input.GetMouseButtonDown(0) && bulletCount>0)
         {
             player.velocity = new Vector3(0,  0,  0);
+
+            if(playerMovement.isGrounded == true)
+            {
+                player.drag = 0;
+            }
+            
             player.AddForce(whereLooking , ForceMode.Impulse);
             bulletCount -= 1;
 
