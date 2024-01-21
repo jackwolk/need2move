@@ -20,11 +20,13 @@ public class Death : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (gameObject.tag == "deathBarrier")
+        if (gameObject.tag == "deathBarrier" && other.tag == "Player")
         {
             level.SinglePlayerDeath();
+            Debug.Log("TRIGGER");
         }
     }
+
 
 
 }

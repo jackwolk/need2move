@@ -19,7 +19,7 @@ public class camerapos : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         camera.transform.position = cameraPos.transform.position;
         camera.transform.rotation = cameraPos.transform.rotation;
