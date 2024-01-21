@@ -129,10 +129,12 @@ MonoBehaviour:
   groundLayerNum: 6
   wallLayerNum: 7
   bounceLayerNum: 11
+  objectLayerNum: 12
   bounceNum: 0
   target: {fileID: 0}
   timer: 0
   maxTime: 1000
+  mr: {fileID: 6142131150845035057}
 --- !u!54 &6053929325531645880
 Rigidbody:
   m_ObjectHideFlags: 0

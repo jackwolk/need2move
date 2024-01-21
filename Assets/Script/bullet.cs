@@ -14,19 +14,30 @@ public class bullet : MonoBehaviour
     public int groundLayerNum;
     public int wallLayerNum;
     public int bounceLayerNum;
+    public int objectLayerNum;
     public int bounceNum = 0;
     public target target;
     public int timer = 0;
     public int maxTime = 500;
     Vector3 lastVelocity;
-    
+    bool canSee = false;
+    public MeshRenderer mr;
     
 
     void Start()
     {
+        mr.enabled = false;
         frame = 0;
         gun = GameObject.Find("Gun Gun");
         gameObject.transform.Rotate(90, 0, 0);
+        StartCoroutine("SeeBullet");
+    }
+
+    IEnumerator SeeBullet()
+    {
+        yield return new WaitForSeconds(.025f);
+        Debug.Log("I CAN SEE");
+        mr.enabled = true;
     }
 
     private void FixedUpdate()
@@ -90,6 +101,11 @@ public class bullet : MonoBehaviour
 
                 rb.velocity = Vector3.ClampMagnitude(newDirection * Mathf.Max(lastVelocity.magnitude, 2), 65);
 
+        }
+        else if(collision.gameObject.layer == objectLayerNum)
+        {
+            Destroy(gameObject);
+            collision.rigidbody.AddExplosionForce(3000, collision.transform.position, 100, 10000);
         }
 
     }

@@ -6,30 +6,43 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
 
+    public GameObject Player;
+    [Space]
+    [Header("Checking Ground")]
     public bool isGrounded;
     public Transform groundCheck;
     public float groundDistance = 0.4f;
     public LayerMask groundMask;
 
+    [Space]
 
-    private Vector3 PlayerMovementInput;
-    private Vector2 PlayerMouseInput;
-    private float xRot;
-    private float yRot;
+    [Header("New Movement")]
+    //FIXED STUFF
+    public float horizontalInput;
+    public float verticalInput;
+    public Vector3 moveDirection;
+    public Transform orientation;
+    public float groundDrag = 5;
+    public float speedLimit;
+    public float airSpeedLimit;
+    public KeyCode jumpKey;
+    public float airMultiplier;
+    public float jumpCooldown;
 
-
+    [Space]
+    [Header("Camera Stuff")]
     [SerializeField] private Transform PlayerCamera;
     [SerializeField] private Rigidbody PlayerBody;
     [Space]
+
+    [Header("Jumping/Gravity")]
     [SerializeField] private float Speed;
     [SerializeField] private float airSpeed;
     [SerializeField] private float Sensitivity;
     [SerializeField] private float Jumpforce;
-    [SerializeField] private float speedLimit;
     [SerializeField] private float gravity;
-    public bool isFalling;
-    float gravityMultiplier = 1;
-    public float gravityAdder;
+    public bool canJump = true;
+    
     public bool isDead;
 
 
@@ -46,79 +59,93 @@ public class PlayerMovement : MonoBehaviour
 
         isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
 
-        PlayerMovementInput = new Vector3(Input.GetAxis("Horizontal"), 0f, Input.GetAxis("Vertical"));
-        PlayerMouseInput = new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
+        MyInput();
 
-        MovePlayer();
-        //MovePlayerCamera();
-
-        if (isFalling == true)
+        if (isGrounded)
         {
-            gravityMultiplier += gravityAdder;
+            PlayerBody.drag = groundDrag;
         }
         else
         {
-            gravityMultiplier = 1;
+            PlayerBody.drag = 0;
         }
+        //MovePlayer();
+        //MovePlayerCamera();
 
 
     }
 
-    private void MovePlayer()
-    {
 
-        PlayerBody.AddForce(Vector3.down * Time.deltaTime * 10, ForceMode.Force);
+
+    private void FixedUpdate()
+    {
+        FixedMovedPlayer();
+        FixedSpeedLimit();
+
+    }
+
+    private void FixedSpeedLimit()
+    {
+        Vector3 flatVel = new Vector3(PlayerBody.velocity.x, 0f, PlayerBody.velocity.z);
+
+        if(flatVel.magnitude > speedLimit)
+        {
+            Vector3 limitedVel = new Vector3(0,0,0);
+
+            if(isGrounded == true)
+            {
+
+                limitedVel = flatVel.normalized * speedLimit;
+            }
+            if(isGrounded == false)
+            {
+                limitedVel = flatVel.normalized * airSpeedLimit;
+            }
+
+            PlayerBody.velocity = new Vector3(limitedVel.x, PlayerBody.velocity.y, limitedVel.z);
+        }
+    }
+
+    private void MyInput()
+    {
+        horizontalInput = Input.GetAxisRaw("Horizontal");
+        verticalInput = Input.GetAxisRaw("Vertical");
+
+
+        if (Input.GetKey(jumpKey) && isGrounded && canJump == true)
+        {
+            canJump = false;
+
+            Jump();
+            Invoke(nameof(ResetJump), jumpCooldown);
+        }
+    }
+
+    private void Jump()
+    {
+        
+        PlayerBody.velocity = new Vector3(PlayerBody.velocity.x, 0f, PlayerBody.velocity.z);
+        PlayerBody.AddForce(transform.up * 20, ForceMode.Impulse);
+    }
+
+    private void ResetJump()
+    {
+        canJump = true;
+    }
+
+    private void FixedMovedPlayer()
+    {
+        moveDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;
 
         if (PlayerBody.velocity.magnitude <= speedLimit && isGrounded)
         {
-            Vector3 MoveVector = transform.TransformDirection(PlayerMovementInput) * Speed;
-            Vector3 Velocity = new Vector3(MoveVector.x, MoveVector.y, MoveVector.z);
-            PlayerBody.AddForce(Velocity, ForceMode.Force);
-        }
-        else if (PlayerBody.velocity.magnitude <= speedLimit && !isGrounded)
-        {
-            Vector3 MoveVector = transform.TransformDirection(PlayerMovementInput) * airSpeed;
-            Vector3 Velocity = new Vector3(MoveVector.x, MoveVector.y, MoveVector.z);
-            PlayerBody.AddForce(Velocity, ForceMode.Force);
-        }
 
-        if (PlayerBody.velocity.x >= speedLimit && isGrounded)
-        {
-            Vector3 xClamp = PlayerBody.velocity;
-            xClamp = Vector3.ClampMagnitude(xClamp, speedLimit);
-            PlayerBody.velocity = new Vector3(xClamp.x, PlayerBody.velocity.y, PlayerBody.velocity.z);
-        }
-
-        if (PlayerBody.velocity.z >= speedLimit && isGrounded)
-        {
-            Vector3 zClamp = PlayerBody.velocity;
-            zClamp = Vector3.ClampMagnitude(zClamp, speedLimit);
-            PlayerBody.velocity = new Vector3(PlayerBody.velocity.x, PlayerBody.velocity.y, zClamp.z);
-        }
-
-        if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
-        {
-            if (PlayerBody.velocity.y < 0) { PlayerBody.velocity = new Vector3(PlayerBody.velocity.x, 0, PlayerBody.velocity.z); }
-
-            PlayerBody.AddForce(Vector2.up * Jumpforce, ForceMode.Impulse);
-            Debug.Log(Vector2.up * Jumpforce);
-        }
-
-
-
-        //PlayerBody.AddForce(Vector3.down * gravity * gravityMultiplier , ForceMode.Force);
-
-        if (PlayerBody.velocity.y < 0)
-        {
-            isFalling = true;
+            PlayerBody.AddForce(moveDirection.normalized * Speed * 5f, ForceMode.Force);
         }
         else
         {
-            isFalling = false;
+            PlayerBody.AddForce(moveDirection.normalized * Speed * 5f * airMultiplier, ForceMode.Force);
         }
-
-
-
     }
 
 }
