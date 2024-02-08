@@ -22,6 +22,7 @@ public class level : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked; 
         deathMessage = gameObject.transform.Find("deathMessage").GetComponent<Canvas>();
         deathMessage.enabled = false;
+        
     }
 
     // Update is called once per frame

@@ -129,7 +129,9 @@ MonoBehaviour:
   groundLayerNum: 6
   wallLayerNum: 7
   bounceLayerNum: 11
-  objectLayerNum: 12
+  lightobjectLayerNum: 12
+  medobjectLayerNum: 13
+  heavyobjectLayerNum: 14
   bounceNum: 0
   target: {fileID: 0}
   timer: 0

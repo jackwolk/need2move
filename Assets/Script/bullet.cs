@@ -14,7 +14,9 @@ public class bullet : MonoBehaviour
     public int groundLayerNum;
     public int wallLayerNum;
     public int bounceLayerNum;
-    public int objectLayerNum;
+    public int lightobjectLayerNum;
+    public int medobjectLayerNum;
+    public int heavyobjectLayerNum;
     public int bounceNum = 0;
     public target target;
     public int timer = 0;
@@ -35,7 +37,7 @@ public class bullet : MonoBehaviour
 
     IEnumerator SeeBullet()
     {
-        yield return new WaitForSeconds(.025f);
+        yield return new WaitForSeconds(.005f);
         Debug.Log("I CAN SEE");
         mr.enabled = true;
     }
@@ -102,7 +104,17 @@ public class bullet : MonoBehaviour
                 rb.velocity = Vector3.ClampMagnitude(newDirection * Mathf.Max(lastVelocity.magnitude, 2), 65);
 
         }
-        else if(collision.gameObject.layer == objectLayerNum)
+        else if(collision.gameObject.layer == lightobjectLayerNum)
+        {
+            Destroy(gameObject);
+            collision.rigidbody.AddExplosionForce(3000, collision.transform.position, 100, 10000);
+        }
+        else if (collision.gameObject.layer == medobjectLayerNum)
+        {
+            Destroy(gameObject);
+            collision.rigidbody.AddExplosionForce(3000, collision.transform.position, 100, 10000);
+        }
+        else if (collision.gameObject.layer == heavyobjectLayerNum)
         {
             Destroy(gameObject);
             collision.rigidbody.AddExplosionForce(3000, collision.transform.position, 100, 10000);
