@@ -142,7 +142,7 @@ public class bulletUI : MonoBehaviour
                 Destroy(GameObject.Find("AirUIImage #" + current));
             }
 
-            if (airscr.playerMovement.isGrounded == true)
+            if (airscr.playerMovement.grounded == true)
             {
                 for (int i = 0; i < air_array.Length; i++)
                 {

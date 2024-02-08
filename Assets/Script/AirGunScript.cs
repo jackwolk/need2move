@@ -44,7 +44,7 @@ public class AirGunScript : MonoBehaviour
         {
             player.velocity = new Vector3(0,  0,  0);
 
-            if(playerMovement.isGrounded == true)
+            if(playerMovement.grounded == true)
             {
                 player.drag = 0;
             }
@@ -54,7 +54,7 @@ public class AirGunScript : MonoBehaviour
 
         }
 
-        if (playerMovement.isGrounded == true)
+        if (playerMovement.grounded == true)
         {
             bulletCount = 3;
         }
