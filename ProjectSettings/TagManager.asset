@@ -19,9 +19,9 @@ TagManager:
   - deathBarrier
   - Glow
   - BouncyWALL
-  - Object
-  - 
-  - 
+  - LightObject
+  - MedObject
+  - HeavyObject
   - 
   - 
   - 
